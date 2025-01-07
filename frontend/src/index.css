@@ -1,0 +1,365 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #eae8ff;
+}
+
+.dashboard {
+  display: flex;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px 0; /* Top and bottom padding only, no left/right padding */
+  background-color: #CFCFFF; /* Sets background color for the entire right side */
+  box-sizing: border-box; /* Ensures padding is included in the width */
+  min-height: 100vh; /* Makes the container fill the full height of the viewport */
+  margin-left: 200px;
+  width: calc(100% - 260px); /* Adjust content width */
+}
+
+
+
+.card-container {
+  display: flex;
+  gap: 20px; /* Space between the cards */
+  flex-wrap: wrap;
+  justify-content: space-evenly; /* Distributes cards evenly with equal gaps */
+  padding: 20px; /* Adds padding for the card container */
+}
+
+.card img {
+  width: 100%; /* Adjust based on the card's width */
+  height: 150px; /* Set a uniform height for all images */
+  object-fit: cover; /* Ensures the image fits nicely without distortion */
+  border-radius: 8px; /* Optional: Adds rounded corners for consistency */
+}
+
+.card {
+  width: 300px; /* Fixed width for consistent card size */
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: row;
+}
+
+.main-content {
+  margin-left: 240px; /* Matches the width of the sidebar */
+  width: calc(100% - 250px); /* Ensures the right container takes remaining space */
+  box-sizing: border-box; /* Ensures padding is included in the width */
+  
+}
+
+.back-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 20px; /* Move the button slightly away from the sidebar */
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between back button and heading */
+  margin-bottom: 20px; /* Space below the header */
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0; /* Remove default margins for better alignment */
+}
+
+/* Overall Layout */
+.main-content {
+  margin-left: 255px; /* Adjust according to sidebar width */
+  padding: 20px;
+  background-color: #CFCFFF; /* Sets background color for the entire right side */
+  height: 100vh; /* Full height */
+  box-sizing: border-box;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px; /* Spacing below header */
+}
+
+.back-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Time Table Container */
+.time-table-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.time-table-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fefefe; /* Matches your card background color */
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Action Buttons */
+.action-button {
+  background-color: #ffa500; /* Orange button color */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.action-button:hover {
+  background-color: #cc8400;
+}
+
+/* Generate Button */
+.generate-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.generate-button {
+  background-color: #9370db; /* Purple button color */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.generate-button:hover {
+  background-color: #7b5dbd;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background-color: #302e2e;
+  color: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 500px;
+  /* height: 500px; */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.modal-close-button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.modal-close-button:hover {
+  background-color: #b42424;
+}
+
+.modal-body label {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.modal-body select {
+  margin-left: 10px;
+  padding: 5px;
+  border-radius: 4px;
+  border: none;
+}
+
+.modal-footer {
+  text-align: center;
+}
+
+.save-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px; /* Slightly increased font size */
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.modal-body {
+  margin-top: 20px; /* Added space before the first input */
+}
+
+
+
+
+
+/* ////////////////////////////////////////////////////////////////////////////////////////Teacher */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #302E2E;
+  color: white;
+  width: 500px;
+  max-height: 90%;
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  background-color: transparent;
+  color: white;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #B42424;
+}
+
+.modal-body {
+  margin-top: 20px;
+}
+
+.modal-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.teacher-section,
+.subject-section {
+  margin-top: 20px;
+}
+
+.modal-input {
+  display: flex;
+  align-items: center; /* Align labels and inputs vertically */
+  margin-bottom: 12px; /* Add space between rows */
+}
+
+.modal-input label {
+  margin-right: 15px; /* Space between label and input */
+  min-width: 160px; /* Fixed width for labels */
+  text-align: left; /* Align label text to the right */
+  line-height: 1.5; /* Adjust vertical alignment */
+}
+
+.modal-input input,
+.modal-input select {
+  flex-grow: 1; /* Allow inputs to stretch if needed */
+  height: 30px; /* Set consistent height */
+  padding: 5px 8px; /* Add padding inside inputs */
+  margin-top: -17px; /* Fine-tune position by bringing text slightly lower */
+  box-sizing: border-box; /* Prevent padding from affecting size */
+}
+
+
+
+.save-button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #005500;
+}
