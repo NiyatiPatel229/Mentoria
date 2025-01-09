@@ -31,3 +31,17 @@ Visualizes data through interactive charts and graphs to aid decision-making.
 * <b>Pandas:  </b> For data manipulation.
 * <b>Matplotlib & Seaborn:</b> For data visualization.
 * <b>Scikit-learn: </b> For additional analysis and feature engineering.
+  
+## Usage
+
+* **Login/Signup:** Users can create accounts or log in to access functionalities.
+* **Timetable Generation:** Specify constraints and generate timetables with ease.
+* **Question Paper Generation:** Upload syllabus/content, set preferences, and generate tailored question papers.
+* **EDA:** Upload student data in CSV format to visualize and analyze trends.
+  
+## Future Scope
+
+* Integration of predictive analytics for student performance.
+* Support for multi-language question generation.
+* Enhanced RL algorithms for faster timetable optimization.
+* Mobile application development for on-the-go access.
