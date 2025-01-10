@@ -1,7 +1,9 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #eae8ff;
+body, html {
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove default padding */
+  background-color: #cfcfff; /* Matches timetable page background */
+  min-height: 100%; /* Ensure it applies to the full page height */
+  font-family: Arial, sans-serif; /* Ensure consistent font */
 }
 
 .dashboard {
@@ -362,4 +364,241 @@ h1 {
 
 .save-button:hover {
   background-color: #005500;
+}
+
+/* Add these styles to your existing index.css */
+
+/* Class Buttons */
+.class-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.class-button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.class-button:hover {
+  background-color: #357abd;
+}
+
+/* Create Class Modal Specific Styles */
+.remaining-lectures {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #3a3a3a;
+  border-radius: 4px;
+}
+
+.remaining-lectures h3 {
+  margin: 0;
+  color: #fff;
+}
+
+.lecture-section {
+  background-color: #3a3a3a;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.lecture-section h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+/* Delete Button */
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+/* Modal Footer Adjustment */
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Dropdown Styles */
+.modal-input select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: black;
+}
+
+.modal-input select:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+/* Number Input Styles */
+.modal-input input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+/* Lecture Section Input Alignment */
+.lecture-section .modal-input {
+  margin-bottom: 15px;
+}
+
+.lecture-section .modal-input:last-child {
+  margin-bottom: 0;
+}
+
+.disabled-button {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ///////////////////////////////////////////////////////////QUESTION PAPER//////////////////////////////// */
+/* General styling */
+/* General Styles */
+.question-paper-generator {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #cfcfff; /* Matches timetable page background */
+  width: 100vw; /* Full width of viewport */
+  height: 100vh; /* Full height of viewport */
+  box-sizing: border-box; /* Ensure padding is included in dimensions */
+  display: flex; /* Optional for centering content */
+  flex-direction: column; /* Stack content vertically */
+  margin-left: 250px;
+}
+
+
+.title {
+  margin: 0; /* Remove default margin */
+  font-size: 24px;
+  color: #000000;
+  font-weight: bold;
+}
+
+/* File Input and Text Paste Section */
+.file-input-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: 150px;
+}
+
+.label {
+  margin-right: 10px;
+  font-size: 14px;
+  color: #4a4a4a;
+  margin-left: 50px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  background-color: #f5a623; /* Orange color for buttons */
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.upload-icon {
+  margin-right: 5px;
+}
+
+.separator {
+  margin: 0 10px;
+  font-size: 14px;
+  color: #4a4a4a;
+  margin-left: 50px;
+}
+
+.text-area {
+  width: 300px;
+  height: 80px;
+  resize: none;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+/* Sections (MCQ, Descriptive, Scenario-based) */
+.section {
+  margin-top: 50px;
+  margin-left: 150px;
+}
+
+.add-button {
+  background-color: #f5a623;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  color: white;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.input {
+  margin-right: 20px;
+  border-radius: 4px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  width: 100px;
+}
+
+/* Generate Button */
+.generate-button {
+  display: block;
+  margin: 0 auto;
+  background-color: #7a5ff8; /* Purple color for generate button */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 50px;
+}
+
+.generate-button:hover {
+  background-color: #6a4ee6; /* Slightly darker purple on hover */
+}
+
+.title-bar {
+  display: flex;
+  align-items: center; /* Vertically align items */
+  gap: 10px; /* Add space between the back button and title */
+  margin-bottom: 20px; /* Space below the title bar */
 }
