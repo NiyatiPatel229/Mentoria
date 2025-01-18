@@ -1,38 +1,63 @@
 .sidebar {
-    width: 215px;
-    background-color: #D7D4E9;
-    color: rgb(0, 0, 0);
-    height: 100vh;
-    padding: 20px;
-    position: fixed;
-  }
-  
-  .sidebar h2 {
-    margin-bottom: 20px;
-  }
-  
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .sidebar ul li {
-    margin: 10px 0;
-    cursor: pointer;
-  }
-  
-  .sidebar .tutorials {
-    margin-top: 20px;
-  }
-  
-  .sidebar button {
-    margin-top: 20px;
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    width: 100%;
-    border-radius: 5px;
-  }
-  
+  width: 210px;
+  background-color: #fffcff;
+  color: #6a4ee6; /* Updated text color */
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.sidebar .logo {
+  width: 80%; /* Reduced logo size */
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 10px 0 0 0;
+  cursor: pointer;
+}
+
+.sidebar ul li a {
+  color: #6a4ee6; /* Updated text color */
+  text-decoration: none;
+  padding: 10px;
+  display: block;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.sidebar ul li a:hover {
+  background-color: #6a4ee6; /* Updated hover color */
+  color: white;
+}
+
+.sidebar .tutorials {
+  margin-top: 20px;
+}
+
+.sidebar button {
+  margin-top: 20px;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 5px;
+}
+
+#tut{
+  color: #310ecb;
+  font-weight: 600;
+  margin-left: 10px;
+}

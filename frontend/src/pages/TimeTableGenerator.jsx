@@ -127,7 +127,6 @@ const TimeTableGenerator = () => {
     // Make the specific class button green
     const classButtons = document.querySelectorAll('.class-button');
     classButtons[selectedClass].style.backgroundColor = "#73FD78";
-    
     setIsCreateClassModalOpen(false);
   };
 
@@ -192,7 +191,7 @@ const TimeTableGenerator = () => {
         key={index}
         className="class-button"
         onClick={() => handleClassClick(index)}
-        style={{ backgroundColor: "#4a90e2" }} // Set default blue color explicitly
+        style={{ backgroundColor: "#6a4ee6" }} // Set default blue color explicitly
       >
         {className}
       </button>
@@ -200,7 +199,7 @@ const TimeTableGenerator = () => {
     <button 
       className="action-button create-classes-button" 
       onClick={handleCreateClass}
-      style={{ backgroundColor: "#ffa500" }} // Keep create button orange
+      // style={{ backgroundColor: "#ffa500" }} // Keep create button orange
     >
       + Create
     </button>

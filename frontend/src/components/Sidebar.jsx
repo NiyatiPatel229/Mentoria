@@ -1,24 +1,37 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Sidebar.css';
 
 const Sidebar = () => {
   return (
     <div className="sidebar">
-      <h2>Mentoria</h2>
+      <Link to="/">
+  <img src="/assets/mentoria.jpg" alt="Mentoria Logo" className="logo" />
+</Link>
+
       <ul>
-        <li>Time Table Generator</li>
-        <li>Question Paper Generator</li>
-        <li>Analysis</li>
-        <li>Data</li>
-        <li>Coming Soon...</li>
+        <li>
+          <Link to="/time-table-generator">Time Table Generator</Link>
+        </li>
+        <li>
+          <Link to="/question-paper-generator">Question Paper Generator</Link>
+        </li>
+        <li>
+          <Link to="/analysis">Analysis</Link>
+        </li>
       </ul>
       <div className="tutorials">
-        <h3>Tutorials</h3>
+        <h3 id='tut'>Tutorials</h3>
         <ul>
-          <li>1. Time Table</li>
-          <li>2. Question Paper</li>
-          <li>3. Data</li>
-          <li>4. Analysis</li>
+          <li>
+            <Link to="/tutorials/time-table">1. Time Table</Link>
+          </li>
+          <li>
+            <Link to="/tutorials/question-paper">2. Question Paper</Link>
+          </li>
+          <li>
+            <Link to="/tutorials/analysis">4. Analysis</Link>
+          </li>
         </ul>
       </div>
       <button>Send Feedback</button>

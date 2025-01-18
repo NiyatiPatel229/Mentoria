@@ -15,5 +15,7 @@
   
   .card h3 {
     margin-top: 10px;
+    text-decoration: none;
+    color: white;
   }
   

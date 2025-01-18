@@ -35,7 +35,7 @@ const QuestionPaperGenerator = () => {
   };
 
   return (
-    <div className="question-paper-generator">
+    <div className="main-content">
       {/* Title Section */}
       <div className="title-bar">
         <button className="back-button" onClick={() => navigate(-1)}>
@@ -47,7 +47,7 @@ const QuestionPaperGenerator = () => {
       {/* File Input and Text Paste Section */}
       <div className="file-input-section">
         <label className="label">Choose file :</label>
-        <button className="button">
+        <button className="action-button">
           <span role="img" aria-label="upload" className="upload-icon">
             📤
           </span>{" "}
@@ -65,7 +65,7 @@ const QuestionPaperGenerator = () => {
         </button>
         {mcqFields.map((field, index) => (
           <div key={index} className="field-row">
-            <label className="label">Number of MCQ:</label>
+            <label className="label">Number of MCQ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
             <input
               type="number"
               value={field.number}
@@ -74,7 +74,7 @@ const QuestionPaperGenerator = () => {
               }
               className="input"
             />
-            <label className="label">Marks of MCQ:</label>
+            <label className="label">Marks of MCQ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
             <input
               type="number"
               value={field.marks}
@@ -94,7 +94,7 @@ const QuestionPaperGenerator = () => {
         </button>
         {descFields.map((field, index) => (
           <div key={index} className="field-row">
-            <label className="label">Number of Descriptive:</label>
+            <label className="label">Number of Descriptive:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
             <input
               type="number"
               value={field.number}
@@ -103,7 +103,7 @@ const QuestionPaperGenerator = () => {
               }
               className="input"
             />
-            <label className="label">Marks of Descriptive:</label>
+            <label className="label">Marks of Descriptive:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
             <input
               type="number"
               value={field.marks}
