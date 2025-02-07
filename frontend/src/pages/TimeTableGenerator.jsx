@@ -4,6 +4,12 @@ import { useNavigate } from "react-router-dom";
 const TimeTableGenerator = () => {
   const navigate = useNavigate();
 
+  const handleGenerate = () => {
+    // Logic to send selected inputs to the ML model (API call)
+    // After receiving the response, navigate to the output route
+    navigate('/time-table-generator/toutput');
+  };
+
   // State for modals
   const [isTimeTableModalOpen, setIsTimeTableModalOpen] = useState(false);
   const [isAddTeachersModalOpen, setIsAddTeachersModalOpen] = useState(false);
@@ -207,7 +213,7 @@ const TimeTableGenerator = () => {
 </div>
 
         <div className="generate-button-container">
-          <button className="generate-button">GENERATE</button>
+          <button onClick={handleGenerate} className="generate-button">GENERATE</button>
         </div>
       </div>
 

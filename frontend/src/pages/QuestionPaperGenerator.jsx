@@ -7,6 +7,12 @@ const QuestionPaperGenerator = () => {
   const [descFields, setDescFields] = useState([{ number: 0, marks: 0 }]);
   const [scenarioFields, setScenarioFields] = useState([{ number: 0, marks: 0 }]);
 
+  const handleGenerate = () => {
+    // Logic to send selected inputs to the ML model (API call)
+    // After receiving the response, navigate to the output route
+    navigate('/question-paper-generator/qoutput');
+  };
+
   const addMcqField = () => {
     setMcqFields([...mcqFields, { number: 0, marks: 0 }]);
   };
@@ -46,17 +52,30 @@ const QuestionPaperGenerator = () => {
 
       {/* File Input and Text Paste Section */}
       <div className="file-input-section">
-        <label className="label">Choose file :</label>
-        <button className="action-button">
-          <span role="img" aria-label="upload" className="upload-icon">
-            📤
-          </span>{" "}
-          Select
-        </button>
-        <span className="separator">or</span>
-        <label className="label">Paste text :</label>
-        <textarea placeholder="Enter text" className="text-area" />
-      </div>
+  <label className="label">Choose file :</label>
+  <input
+    type="file"
+    accept=".csv"
+    onChange={(e) => {
+      const file = e.target.files[0];
+      if (file) {
+        console.log("Selected file:", file.name); // You can handle the file processing here
+      }
+    }}
+    style={{ display: "none" }}
+    id="file-upload"
+  />
+  <label htmlFor="file-upload" className="action-button">
+    <span role="img" aria-label="upload" className="upload-icon">
+      📤
+    </span>{" "}
+    Select
+  </label>
+  <span className="separator">or</span>
+  <label className="label">Paste text :</label>
+  <textarea placeholder="Enter text" className="text-area" />
+</div>
+
 
       {/* MCQ Section */}
       <div className="section">
@@ -146,7 +165,7 @@ const QuestionPaperGenerator = () => {
       </div>
 
       {/* Generate Button */}
-      <button className="generate-button">GENERATE</button>
+      <button onClick={handleGenerate} className="generate-button">GENERATE</button>
     </div>
   );
 };
