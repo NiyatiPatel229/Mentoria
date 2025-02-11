@@ -4,8 +4,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import os
-REPORTS_DIR = os.path.join(os.path.dirname(__file__), 'reports')  # Add this
-os.makedirs(REPORTS_DIR, exist_ok=True)  # Add this
+
+REPORTS_DIR = os.path.join(os.path.dirname(__file__), 'reports')
+os.makedirs(REPORTS_DIR, exist_ok=True)
 
 
 def get_subject_columns(df):
@@ -94,45 +95,38 @@ def analyze_student_performance(df, max_marks):
 
 
 def normalize_scores(df, max_marks):
-    """Normalize scores to percentage (0-100 scale) for visualization"""
-    subjects = get_subject_columns(df)
-    normalized_df = df.copy()
-    
-    for subject in subjects:
-        normalized_df[subject] = (df[subject] / max_marks) * 100
-    
-    return normalized_df
+    """Normalize scores to percentage scale"""
+    subject_columns = get_subject_columns(df)
+    return df[subject_columns].apply(lambda x: (x / max_marks) * 100)
 
 def compare_insights(current_insights, historical_insights):
-   """
-   Compare current and historical insights.
-   Args:
-       current_insights: Insights from current data.
-       historical_insights: Insights from historical data.
-   Returns:
-       comparison: A dictionary containing comparison results.
-   """
-   comparison = {}
-   
-   for subject in current_insights['subject_averages']:
-       current_avg = current_insights['subject_averages'][subject]['average']
-       historical_avg = historical_insights['subject_averages'][subject]['average']
-       difference = current_avg - historical_avg
-       
-       # Calculate percentage change
-       if historical_avg != 0:  # Avoid division by zero
-           percentage_change = (difference / historical_avg) * 100
-       else:
-           percentage_change = 0  # Handle case where historical average is 0
-       
-       comparison[subject] = {
-           'current_average': current_avg,
-           'historical_average': historical_avg,
-           'difference': difference,
-           'percentage_change': percentage_change
-       }
-   
-   return comparison
+    """Compare current and historical performance data"""
+    comparison = {'subjects': {}, 'overall': {}}
+    
+    # Subject-wise comparison
+    for subject in current_insights['subject_averages']:
+        curr = current_insights['subject_averages'][subject]
+        hist = historical_insights['subject_averages'][subject]
+        
+        comparison['subjects'][subject] = {
+            'current_avg': curr['average'],
+            'historical_avg': hist['average'],
+            'difference': curr['average'] - hist['average'],
+            'percentage_change': ((curr['average'] - hist['average']) / hist['average']) * 100
+        }
+    
+    # Overall comparison
+    comparison['overall'] = {
+        'current_top_performers': current_insights['top_performers']['overall'],
+        'historical_top_performers': historical_insights['top_performers']['overall'],
+        'failure_rate_change': {
+            subject: current_insights['failure_counts'][subject] - historical_insights['failure_counts'][subject]
+            for subject in current_insights['failure_counts']
+        }
+    }
+    
+    return comparison
+
 
 def visualize_student_performance(df, term_label, max_marks):
     """Create visualizations for student performance with normalized scores."""
@@ -418,9 +412,9 @@ def visualize_comparison(current_df, historical_df, max_marks):
     )
     fig3.write_html('reports/grade_distribution_comparison.html')'''
     
-    
-def generate_html_report(insights, term_label):
-    """Generate HTML report for a single term's insights"""
+
+def generate_report_html(insights, term_label):
+    """Generate HTML report in original format"""
     html = f"""
     <html>
     <head>
@@ -461,11 +455,6 @@ def generate_html_report(insights, term_label):
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 border-radius: 5px;
             }}
-            .highlight {{
-                background-color: #e8f4f8;
-                padding: 2px 5px;
-                border-radius: 3px;
-            }}
         </style>
     </head>
     <body>
@@ -473,7 +462,7 @@ def generate_html_report(insights, term_label):
             <h1>Student Performance Analysis Report - {term_label}</h1>
             
             <div class="section">
-                <h2>1. Subject-wise Analysis</h2>
+                <h2>Subject-wise Analysis</h2>
                 <table>
                     <tr>
                         <th>Subject</th>
@@ -501,14 +490,14 @@ def generate_html_report(insights, term_label):
             </div>
             
             <div class="section">
-                <h2>2. Failed Students Analysis</h2>
+                <h2>Failed Students Analysis</h2>
     """
     
     # Add failed students analysis
     for subject, students in insights['failed_students'].items():
         if students:
             html += f"""
-                <h3>{subject} - Failed Students: {insights['failure_counts'][subject]}</h3>
+                <h3>{subject} (Failures: {insights['failure_counts'][subject]})</h3>
                 <table>
                     <tr>
                         <th>Student Name</th>
@@ -528,7 +517,7 @@ def generate_html_report(insights, term_label):
             </div>
             
             <div class="section">
-                <h2>3. High Performers (Above 70%)</h2>
+                <h2>High Performers (Above 70%)</h2>
     """
     
     # Add high performers
@@ -546,7 +535,7 @@ def generate_html_report(insights, term_label):
             </div>
             
             <div class="section">
-                <h2>4. Top 5 Overall Performers</h2>
+                <h2>Top 5 Overall Performers</h2>
                 <table>
                     <tr>
                         <th>Rank</th>
@@ -575,125 +564,22 @@ def generate_html_report(insights, term_label):
     
     return html
 
-def generate_comparison_report(comparison_results):
-    """Generate HTML report for comparison between terms"""
-    html = """
-    <html>
-    <head>
-        <title>Performance Comparison Report</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-                color: #333;
-            }
-            .container {
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-            h1, h2 {
-                color: #2c3e50;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 15px 0;
-            }
-            th, td {
-                border: 1px solid #ddd;
-                padding: 12px;
-                text-align: left;
-            }
-            th {
-                background-color: #f5f6fa;
-            }
-            tr:nth-child(even) {
-                background-color: #f9f9f9;
-            }
-            .positive-change {
-                color: #27ae60;
-            }
-            .negative-change {
-                color: #c0392b;
-            }
-            .section {
-                margin: 30px 0;
-                padding: 20px;
-                background-color: white;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                border-radius: 5px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Performance Comparison Report</h1>
-            
-            <div class="section">
-                <h2>Subject-wise Comparison</h2>
-                <table>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Current Average</th>
-                        <th>Historical Average</th>
-                        <th>Difference</th>
-                        <th>Percentage Change</th>
-                    </tr>
-    """
-    
-    for subject, data in comparison_results.items():
-        difference_class = "positive-change" if data['difference'] >= 0 else "negative-change"
-        percentage_class = "positive-change" if data['percentage_change'] >= 0 else "negative-change"
-        
-        html += f"""
-                    <tr>
-                        <td>{subject}</td>
-                        <td>{data['current_average']:.2f}</td>
-                        <td>{data['historical_average']:.2f}</td>
-                        <td class="{difference_class}">{data['difference']:.2f}</td>
-                        <td class="{percentage_class}">{data['percentage_change']:.2f}%</td>
-                    </tr>
-        """
-    
-    html += """
-                </table>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    
-    return html
-
 def save_reports(current_insights, historical_insights=None, comparison_results=None):
-    clear_reports()
-    """Save all reports to HTML files"""
-    # Ensure reports directory exists
-    os.makedirs(REPORTS_DIR, exist_ok=True)
+    """Save analysis results to HTML reports"""
+    # Current Term Report
+    with open(os.path.join(REPORTS_DIR, 'current_term_report.html'), 'w') as f:
+        f.write(generate_report_html(current_insights, "Current Term"))
     
-    # Generate and save current term report
-    current_report = generate_html_report(current_insights, "Current Term")
-    current_path = os.path.join(REPORTS_DIR, "current_term_report.html")
-    with open(current_path, "w", encoding="utf-8") as f:
-        f.write(current_report)
-    
+    # Historical Term Report
     if historical_insights:
-        # Generate and save historical term report
-        historical_report = generate_html_report(historical_insights, "Historical Term")
-        historical_path = os.path.join(REPORTS_DIR, "historical_term_report.html")
-        with open(historical_path, "w", encoding="utf-8") as f:
-            f.write(historical_report)
+        with open(os.path.join(REPORTS_DIR, 'historical_term_report.html'), 'w') as f:
+            f.write(generate_report_html(historical_insights, "Historical Term"))
     
+    # Comparison Report
     if comparison_results:
-        # Generate and save comparison report
-        comparison_report = generate_comparison_report(comparison_results)
-        comparison_path = os.path.join(REPORTS_DIR, "comparison_report.html")
-        with open(comparison_path, "w", encoding="utf-8") as f:
-            f.write(comparison_report)
+        with open(os.path.join(REPORTS_DIR, 'comparison_report.html'), 'w') as f:
+            f.write(generate_comparison_html(comparison_results))
 
-    # Add this debug print to verify file creation
-    print(f"Saved reports to: {REPORTS_DIR}")
-    print(os.listdir(REPORTS_DIR))
 
 
 def clear_reports():
@@ -747,3 +633,13 @@ if __name__ == "__main__":
     main()
     
     
+# student_analysis.py
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import os
+
+REPORTS_DIR = os.path.join(os.path.dirname(__file__), 'reports')
+os.makedirs(REPORTS_DIR, exist_ok=True)

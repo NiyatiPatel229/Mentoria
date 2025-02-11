@@ -616,3 +616,27 @@ h1 {
   height: 600px;
   border: none;
 }
+
+.results-container {
+  padding: 20px;
+}
+
+.visualization-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.visualization-item {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.visualization-item h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}

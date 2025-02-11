@@ -13,45 +13,56 @@ const AnalysisOutput = () => {
   }, []);
 
   return (
-    <div>
-      <div className="navigation">
+    <div className='main-content'>
+      <div className="header">
         <button onClick={() => navigate('/analysis')} className="back-button">← Back</button>
         <h1>Analysis Results</h1>
       </div>
       <div className="content">
         {results ? (
           <div className="results-container">
-            {/* Current Term Results */}
+            {/* Reports Section */}
             <div className="report-section">
-              <h2>Current Term Analysis</h2>
+              <h2>Analysis Reports</h2>
               <iframe
                 src={`http://localhost:5000/reports/${results.reports.current}`}
                 style={{ width: '100%', height: '600px', border: 'none' }}
                 title="Current Term Report"
               />
-            </div>
-
-            {/* Show Historical Analysis if available */}
-            {results.historical_insights && (
-              <div className="report-section">
-                <h2>Historical Term Analysis</h2>
+              
+              {results.reports.historical && (
                 <iframe
-                  src={`http://localhost:5000/reports/${results.reports.current}`}
+                  src={`http://localhost:5000/reports/${results.reports.historical}`}
                   style={{ width: '100%', height: '600px', border: 'none' }}
                   title="Historical Term Report"
                 />
-              </div>
-            )}
-
-            {/* Show Comparison if available */}
-            {results.comparison_results && (
-              <div className="report-section">
-                <h2>Comparison Analysis</h2>
+              )}
+              
+              {results.reports.comparison && (
                 <iframe
-                  src={`http://localhost:5000/reports/${results.reports.current}`}
+                  src={`http://localhost:5000/reports/${results.reports.comparison}`}
                   style={{ width: '100%', height: '600px', border: 'none' }}
                   title="Comparison Report"
                 />
+              )}
+            </div>
+
+            {/* Visualizations Section */}
+            {results.reports.visualizations && (
+              <div className="visualizations-section">
+                <h2>Performance Visualizations</h2>
+                <div className="visualization-grid">
+                  {results.reports.visualizations.map((vizFile, index) => (
+                    <div key={index} className="visualization-item">
+                      <h3>{vizFile.split('.')[0].replace(/_/g, ' ')}</h3>
+                      <iframe
+                        src={`http://localhost:5000/reports/${vizFile}`}
+                        style={{ width: '100%', height: '400px', border: 'none' }}
+                        title={vizFile}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
