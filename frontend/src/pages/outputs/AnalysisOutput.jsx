@@ -25,7 +25,7 @@ const AnalysisOutput = () => {
             <div className="report-section">
               <h2>Current Term Analysis</h2>
               <iframe
-                src="http://localhost:5000/reports/current_term_report.html"
+                src={`http://localhost:5000/reports/${results.reports.current}`}
                 style={{ width: '100%', height: '600px', border: 'none' }}
                 title="Current Term Report"
               />
@@ -36,7 +36,7 @@ const AnalysisOutput = () => {
               <div className="report-section">
                 <h2>Historical Term Analysis</h2>
                 <iframe
-                  src="http://localhost:5000/reports/historical_term_report.html"
+                  src={`http://localhost:5000/reports/${results.reports.current}`}
                   style={{ width: '100%', height: '600px', border: 'none' }}
                   title="Historical Term Report"
                 />
@@ -48,7 +48,7 @@ const AnalysisOutput = () => {
               <div className="report-section">
                 <h2>Comparison Analysis</h2>
                 <iframe
-                  src="http://localhost:5000/reports/comparison_report.html"
+                  src={`http://localhost:5000/reports/${results.reports.current}`}
                   style={{ width: '100%', height: '600px', border: 'none' }}
                   title="Comparison Report"
                 />
