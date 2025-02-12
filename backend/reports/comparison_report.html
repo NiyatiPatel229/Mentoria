@@ -1,0 +1,109 @@
+
+    <html>
+    <head>
+        <title>Performance Comparison Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                color: #333;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            h1, h2 {
+                color: #2c3e50;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15px 0;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #f5f6fa;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .positive-change {
+                color: #27ae60;
+            }
+            .negative-change {
+                color: #c0392b;
+            }
+            .section {
+                margin: 30px 0;
+                padding: 20px;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Performance Comparison Report</h1>
+            
+            <div class="section">
+                <h2>Subject-wise Comparison</h2>
+                <table>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Current Average</th>
+                        <th>Historical Average</th>
+                        <th>Difference</th>
+                        <th>Percentage Change</th>
+                    </tr>
+    
+                    <tr>
+                        <td>DAA</td>
+                        <td>18.37</td>
+                        <td>20.66</td>
+                        <td class="negative-change">-2.29</td>
+                        <td class="negative-change">-11.10%</td>
+                    </tr>
+        
+                    <tr>
+                        <td>OS</td>
+                        <td>16.65</td>
+                        <td>18.37</td>
+                        <td class="negative-change">-1.72</td>
+                        <td class="negative-change">-9.35%</td>
+                    </tr>
+        
+                    <tr>
+                        <td>PMR</td>
+                        <td>20.66</td>
+                        <td>18.08</td>
+                        <td class="positive-change">2.58</td>
+                        <td class="positive-change">14.26%</td>
+                    </tr>
+        
+                    <tr>
+                        <td>R_PROG</td>
+                        <td>24.55</td>
+                        <td>16.65</td>
+                        <td class="positive-change">7.90</td>
+                        <td class="positive-change">47.42%</td>
+                    </tr>
+        
+                    <tr>
+                        <td>DBMS</td>
+                        <td>17.51</td>
+                        <td>19.51</td>
+                        <td class="negative-change">-2.00</td>
+                        <td class="negative-change">-10.27%</td>
+                    </tr>
+        
+                </table>
+            </div>
+        </div>
+    </body>
+    </html>
+    

@@ -56,7 +56,9 @@ const handleGenerate = async () => {
     const formData = new FormData();
     formData.append('currentFile', currentFile);
     formData.append('maxMarks', maxMarks);
-    formData.append('useHistorical', usePreviousTermData);
+    // In Analysis.jsx handleGenerate function:
+formData.append('useHistorical', usePreviousTermData ? "true" : "false");
+
     
     if (usePreviousTermData && historicalFile) {
       formData.append('historicalFile', historicalFile);

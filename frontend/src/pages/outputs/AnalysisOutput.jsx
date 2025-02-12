@@ -25,7 +25,7 @@ const AnalysisOutput = () => {
             <div className="report-section">
               <h2>Analysis Reports</h2>
               <iframe
-                src={`http://localhost:5000/reports/${results.reports.current}`}
+                src={`http://localhost:5000/reports/${results.reports.current}?t=${new Date().getTime()}`}
                 style={{ width: '100%', height: '600px', border: 'none' }}
                 title="Current Term Report"
               />
@@ -57,7 +57,7 @@ const AnalysisOutput = () => {
                       <h3>{vizFile.split('.')[0].replace(/_/g, ' ')}</h3>
                       <iframe
                         src={`http://localhost:5000/reports/${vizFile}`}
-                        style={{ width: '100%', height: '400px', border: 'none' }}
+                        style={{ width: '100%', height: '550px', border: 'none' }}
                         title={vizFile}
                       />
                     </div>
