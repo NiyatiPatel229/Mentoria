@@ -209,7 +209,7 @@ def visualize_student_performance(df, term_label, max_marks):
 
     # 3. Performance Bands Distribution
     performance_bands = {
-        'Outstanding (â‰¥85%)': lambda x: x >= 85,
+        'Outstanding (100-85%)': lambda x: x >= 85,
         'Excellent (70-84%)': lambda x: (x >= 70) & (x < 85),
         'Good (55-69%)': lambda x: (x >= 55) & (x < 70),
         'Satisfactory (40-54%)': lambda x: (x >= 40) & (x < 55),
