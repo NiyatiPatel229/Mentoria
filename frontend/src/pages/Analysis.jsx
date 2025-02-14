@@ -86,8 +86,8 @@ const Analysis = () => {
         <button onClick={() => navigate("/")} className="back-button">← Back</button>
         <h1>Analysis</h1>
       </div>
-      <div className="content">
-        <div className="input-section">
+      <div className="time-table-container">
+        <div className="time-table-item">
           <label className="label">Enter the data file in csv format:</label>
           <div className="file-input-container">
             <label className={`action-button ${currentFile ? 'file-selected' : ''}`}>
@@ -108,7 +108,7 @@ const Analysis = () => {
           </div>
         </div>
 
-        <div className="input-section">
+        <div className="time-table-item1">
           <label className="label">Enter maximum marks per subject:</label>
           <input
             type="number"
@@ -120,14 +120,14 @@ const Analysis = () => {
         </div>
 
         <div className="checkbox-section">
-          <div className="file-input-container">
+          <div className="time-table-item">
             <label className="label">
               <input
                 type="checkbox"
                 checked={usePreviousTermData}
                 onChange={(e) => setUsePreviousTermData(e.target.checked)}
               />
-              Use data of previous term
+              Use data of previous term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </label>
             <label
               className={`action-button ${!usePreviousTermData ? "disabled" : ""} ${historicalFile ? 'file-selected' : ''}`}
