@@ -8,10 +8,12 @@ const QuestionPaperGenerator = () => {
   const [scenarioFields, setScenarioFields] = useState([{ number: 0, marks: 0 }]);
   const [fileSelected, setFileSelected] = useState(false);
   const [pastedText, setPastedText] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const fileInputRef = useRef(null);
 
 // QuestionPaperGenerator.jsx modifications
 const handleGenerate = async () => {
+  setIsGenerating(true);
   const formData = new FormData();
   const config = {
       mcq: mcqFields.filter(f => f.number > 0).map(f => ({ marks: f.marks, count: f.number })),
@@ -46,7 +48,16 @@ const handleGenerate = async () => {
   } catch (error) {
       console.error('Generation failed:', error);
       alert(`Generation failed: ${error.message}`);
+  } finally {
+    setIsGenerating(false); // Stop loading regardless of outcome
   }
+};
+
+const getFileName = () => {
+  if (fileInputRef.current?.files[0]) {
+    return fileInputRef.current.files[0].name;
+  }
+  return "No file selected";
 };
 
 
@@ -111,34 +122,42 @@ const handleGenerate = async () => {
       </div>
 
       {/* File Input and Text Paste Section */}
-      <div className="file-input-section">
-        <label className="label">Choose PDF file:</label>
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-          id="file-upload"
-          ref={fileInputRef}
-        />
-        <label 
-          htmlFor="file-upload" 
-          className={`action-button ${pastedText ? "disabled" : ""}`}
-        >
-          <span role="img" aria-label="upload" className="upload-icon">
-            📤
-          </span>{" "}
-          Select
-        </label>
-        <span className="separator">or</span>
-        <label className="label">Paste text:</label>
-        <textarea 
-          placeholder="Enter text here..." 
-          className="text-area"
-          value={pastedText}
-          onChange={handleTextChange}
-          disabled={fileSelected}
-        />
+      {/* Updated File Input Section */}
+      <div className="section">
+        <div className="time-table-item">
+          <label className="label">Choose PDF file:</label>
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+            id="file-upload"
+            ref={fileInputRef}
+          />
+          <div className="file-input-container">
+            <label 
+              htmlFor="file-upload" 
+              className={`action-button ${pastedText ? "disabled" : ""} ${fileInputRef.current?.files[0] ? 'file-selected' : ''}`}
+            >
+              <span role="img" aria-label="upload" className="upload-icon">
+                📤
+              </span>{" "}
+              Select
+            </label>
+            <span className="file-status">
+              {getFileName()}
+            </span>
+          </div>
+          <span className="separator">or</span>
+          <label className="label">Paste text:</label>
+          <textarea 
+            placeholder="Enter text here..." 
+            className="text-area"
+            value={pastedText}
+            onChange={handleTextChange}
+            disabled={fileSelected}
+          />
+        </div>
       </div>
 
       {/* MCQ Section */}
@@ -147,7 +166,7 @@ const handleGenerate = async () => {
           + Add
         </button>
         {mcqFields.map((field, index) => (
-          <div key={index} className="field-row">
+          <div key={index} className="time-table-item">
             <label className="label">Number of MCQ:</label>
             <input
               type="number"
@@ -176,7 +195,7 @@ const handleGenerate = async () => {
           + Add
         </button>
         {descFields.map((field, index) => (
-          <div key={index} className="field-row">
+          <div key={index} className="time-table-item">
             <label className="label">Number of Descriptive:</label>
             <input
               type="number"
@@ -205,7 +224,7 @@ const handleGenerate = async () => {
           + Add
         </button>
         {scenarioFields.map((field, index) => (
-          <div key={index} className="field-row">
+          <div key={index} className="time-table-item">
             <label className="label">Number of Scenario-based:</label>
             <input
               type="number"
@@ -228,9 +247,13 @@ const handleGenerate = async () => {
         ))}
       </div>
 
-      {/* Generate Button */}
-      <button onClick={handleGenerate} className="generate-button">
-        GENERATE
+      {/* Modified Generate Button */}
+      <button 
+        onClick={handleGenerate} 
+        className="generate-button"
+        disabled={isGenerating}
+      >
+        {isGenerating ? "Generating..." : "GENERATE"}
       </button>
     </div>
   );

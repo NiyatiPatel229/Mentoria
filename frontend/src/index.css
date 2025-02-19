@@ -510,7 +510,8 @@ h1 {
 /* Sections (MCQ, Descriptive, Scenario-based) */
 .section {
   margin-top: 50px;
-  margin-left: 150px;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .add-button {
@@ -522,7 +523,7 @@ h1 {
   margin-bottom: 10px;
   cursor: pointer;
   font-size: 14px;
-  margin-left: 700px;
+  margin-right: 1rem;
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
