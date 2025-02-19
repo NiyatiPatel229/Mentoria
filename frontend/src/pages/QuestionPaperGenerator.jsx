@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const QuestionPaperGenerator = () => {
@@ -6,13 +6,51 @@ const QuestionPaperGenerator = () => {
   const [mcqFields, setMcqFields] = useState([{ number: 0, marks: 0 }]);
   const [descFields, setDescFields] = useState([{ number: 0, marks: 0 }]);
   const [scenarioFields, setScenarioFields] = useState([{ number: 0, marks: 0 }]);
+  const [fileSelected, setFileSelected] = useState(false);
+  const [pastedText, setPastedText] = useState("");
+  const fileInputRef = useRef(null);
 
-  const handleGenerate = () => {
-    // Logic to send selected inputs to the ML model (API call)
-    // After receiving the response, navigate to the output route
-    navigate('/question-paper-generator/qoutput');
+// QuestionPaperGenerator.jsx modifications
+const handleGenerate = async () => {
+  const formData = new FormData();
+  const config = {
+      mcq: mcqFields.filter(f => f.number > 0).map(f => ({ marks: f.marks, count: f.number })),
+      descriptive: descFields.filter(f => f.number > 0).map(f => ({ marks: f.marks, count: f.number })),
+      scenario: scenarioFields.filter(f => f.number > 0).map(f => ({ marks: f.marks, count: f.number }))
   };
 
+  // Add inputs to form data
+  formData.append('config', JSON.stringify(config));
+  
+  if (fileSelected && fileInputRef.current.files[0]) {
+      formData.append('pdfFile', fileInputRef.current.files[0]);
+  } else if (pastedText) {
+      formData.append('textInput', pastedText);
+  }
+
+  try {
+      const response = await fetch('http://localhost:5000/api/generate-question-paper', {
+          method: 'POST',
+          body: formData
+      });
+      
+      const result = await response.json();
+      if (result.error) throw new Error(result.error);
+      
+      navigate('/question-paper-generator/qoutput', {
+          state: {
+              questionPaper: result.questionPaper,
+              answerKey: result.answerKey
+          }
+      });
+  } catch (error) {
+      console.error('Generation failed:', error);
+      alert(`Generation failed: ${error.message}`);
+  }
+};
+
+
+  // Field management functions remain unchanged
   const addMcqField = () => {
     setMcqFields([...mcqFields, { number: 0, marks: 0 }]);
   };
@@ -33,11 +71,33 @@ const QuestionPaperGenerator = () => {
         ? [...descFields]
         : [...scenarioFields];
 
-    fields[index][type] = Math.max(0, parseInt(value) || 0); // Prevent values less than 0
+    fields[index][type] = Math.max(0, parseInt(value) || 0);
 
     if (section === "mcq") setMcqFields(fields);
     else if (section === "desc") setDescFields(fields);
     else setScenarioFields(fields);
+  };
+
+  // New file/text input handlers
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileSelected(true);
+      setPastedText(""); // Clear text area
+      console.log("Selected PDF file:", file.name);
+    }
+  };
+
+  const handleTextChange = (e) => {
+    const text = e.target.value;
+    setPastedText(text);
+    
+    if (text.length > 0) {
+      setFileSelected(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""; // Clear file input
+      }
+    }
   };
 
   return (
@@ -52,30 +112,34 @@ const QuestionPaperGenerator = () => {
 
       {/* File Input and Text Paste Section */}
       <div className="file-input-section">
-  <label className="label">Choose file :</label>
-  <input
-    type="file"
-    accept=".csv"
-    onChange={(e) => {
-      const file = e.target.files[0];
-      if (file) {
-        console.log("Selected file:", file.name); // You can handle the file processing here
-      }
-    }}
-    style={{ display: "none" }}
-    id="file-upload"
-  />
-  <label htmlFor="file-upload" className="action-button">
-    <span role="img" aria-label="upload" className="upload-icon">
-      📤
-    </span>{" "}
-    Select
-  </label>
-  <span className="separator">or</span>
-  <label className="label">Paste text :</label>
-  <textarea placeholder="Enter text" className="text-area" />
-</div>
-
+        <label className="label">Choose PDF file:</label>
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+          id="file-upload"
+          ref={fileInputRef}
+        />
+        <label 
+          htmlFor="file-upload" 
+          className={`action-button ${pastedText ? "disabled" : ""}`}
+        >
+          <span role="img" aria-label="upload" className="upload-icon">
+            📤
+          </span>{" "}
+          Select
+        </label>
+        <span className="separator">or</span>
+        <label className="label">Paste text:</label>
+        <textarea 
+          placeholder="Enter text here..." 
+          className="text-area"
+          value={pastedText}
+          onChange={handleTextChange}
+          disabled={fileSelected}
+        />
+      </div>
 
       {/* MCQ Section */}
       <div className="section">
@@ -84,7 +148,7 @@ const QuestionPaperGenerator = () => {
         </button>
         {mcqFields.map((field, index) => (
           <div key={index} className="field-row">
-            <label className="label">Number of MCQ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <label className="label">Number of MCQ:</label>
             <input
               type="number"
               value={field.number}
@@ -93,7 +157,7 @@ const QuestionPaperGenerator = () => {
               }
               className="input"
             />
-            <label className="label">Marks of MCQ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <label className="label">Marks per MCQ:</label>
             <input
               type="number"
               value={field.marks}
@@ -113,7 +177,7 @@ const QuestionPaperGenerator = () => {
         </button>
         {descFields.map((field, index) => (
           <div key={index} className="field-row">
-            <label className="label">Number of Descriptive:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <label className="label">Number of Descriptive:</label>
             <input
               type="number"
               value={field.number}
@@ -122,7 +186,7 @@ const QuestionPaperGenerator = () => {
               }
               className="input"
             />
-            <label className="label">Marks of Descriptive:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <label className="label">Marks per Descriptive:</label>
             <input
               type="number"
               value={field.marks}
@@ -151,7 +215,7 @@ const QuestionPaperGenerator = () => {
               }
               className="input"
             />
-            <label className="label">Marks of Scenario-based:</label>
+            <label className="label">Marks per Scenario:</label>
             <input
               type="number"
               value={field.marks}
@@ -165,7 +229,9 @@ const QuestionPaperGenerator = () => {
       </div>
 
       {/* Generate Button */}
-      <button onClick={handleGenerate} className="generate-button">GENERATE</button>
+      <button onClick={handleGenerate} className="generate-button">
+        GENERATE
+      </button>
     </div>
   );
 };

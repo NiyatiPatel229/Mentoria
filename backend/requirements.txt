@@ -3,3 +3,8 @@ flask-cors
 pandas
 numpy
 plotly
+spacy
+nltk
+pdfminer.six
+PyPDF2
+reportlab

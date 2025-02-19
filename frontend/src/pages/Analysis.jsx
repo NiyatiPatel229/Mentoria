@@ -119,16 +119,17 @@ const Analysis = () => {
           />
         </div>
 
-        <div className="checkbox-section">
+        {/* <div className="checkbox-section"> */}
           <div className="time-table-item">
             <label className="label">
               <input
                 type="checkbox"
                 checked={usePreviousTermData}
-                onChange={(e) => setUsePreviousTermData(e.target.checked)}
+                onChange={(e) => setUsePreviousTermData(e.target.checked)} 
               />
-              Use data of previous term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Use data of previous term
             </label>
+            <div className="file-input-container">
             <label
               className={`action-button ${!usePreviousTermData ? "disabled" : ""} ${historicalFile ? 'file-selected' : ''}`}
             >
@@ -152,7 +153,8 @@ const Analysis = () => {
               {historicalFile ? historicalFile.name : "No file selected"}
             </span>
           </div>
-        </div>
+          </div>
+        {/* </div> */}
 
         <div className="generate-button-section">
           <button
