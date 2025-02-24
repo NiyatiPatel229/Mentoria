@@ -6,6 +6,7 @@ import pandas as pd
 import pprint
 import json
 from werkzeug.utils import secure_filename
+from time_table import MultiClassTimetableEnvironment, QLearningAgent, train_timetable_generator
 from student_analysis import (
     analyze_student_performance, 
     compare_insights, 
@@ -173,6 +174,64 @@ def serve_qreport(filename):
 def serve_report(filename):
     return send_from_directory(app.config['REPORTS_FOLDER'], filename)
 
+
+@app.route('/api/generate-timetable', methods=['POST'])
+def generate_timetable():
+    try:
+        data = request.json
+        print("Received timetable generation request")
+        
+        # Convert frontend data to backend format
+        teachers = {
+            code: details['subjects']
+            for code, details in data['teachers'].items()
+        }
+        teacher_names = {
+            code: details['name']
+            for code, details in data['teachers'].items()
+        }
+        
+        # Create environment
+        env = MultiClassTimetableEnvironment(
+            days=data['num_days'],
+            periods_per_day=data['periods_per_day'],
+            lunch_after_period=data['lunch_after_period'],
+            classes=data['classes'],
+            teachers=teachers,
+            teacher_names=teacher_names,
+            subjects=data['subjects'],
+            class_requirements={
+                cls: {
+                    subj: {
+                        'teacher_code': req['teacher'],
+                        'lectures': req['lectures']
+                    }
+                    for subj, req in subjects.items()
+                }
+                for cls, subjects in data['class_requirements'].items()
+            }
+        )
+        
+        # Train the model
+        agent = QLearningAgent(list(data['subjects'].keys()))
+        best_timetable = train_timetable_generator(env, agent, episodes=1000)
+        
+        # Convert numpy array to serializable format
+        timetable_dict = {
+            cls: env.timetable[cls].tolist()
+            for cls in data['classes']
+        }
+        
+        return jsonify({
+            'status': 'success',
+            'timetable': timetable_dict,
+            'teachers': data['teachers']
+        })
+        
+    except Exception as e:
+        print(f"Error generating timetable: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)})
+    
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs(app.config['REPORTS_FOLDER'], exist_ok=True)

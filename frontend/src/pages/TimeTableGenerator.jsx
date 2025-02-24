@@ -1,162 +1,444 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 
 const TimeTableGenerator = () => {
   const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    num_days: 5,
+    periods_per_day: 6,
+    lunch_after_period: 3,
+    classes: [],
+    subjects: {},
+    teachers: {},
+    class_requirements: {}
+  });
 
-  const handleGenerate = () => {
-    // Logic to send selected inputs to the ML model (API call)
-    // After receiving the response, navigate to the output route
-    navigate('/time-table-generator/toutput');
-  };
+  // Step handlers
+  const nextStep = () => setStep(prev => Math.min(prev + 1, 6));
+  const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
 
-  // State for modals
-  const [isTimeTableModalOpen, setIsTimeTableModalOpen] = useState(false);
-  const [isAddTeachersModalOpen, setIsAddTeachersModalOpen] = useState(false);
-  const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
-
-  // State for Create Time Table Structure
-  const [numDays, setNumDays] = useState(5);
-  const [numPeriods, setNumPeriods] = useState(1);
-  const [lunchBreakAfter, setLunchBreakAfter] = useState(1);
-
-  // State for Add Teachers
-  const [numTeachers, setNumTeachers] = useState(0);
-  const [teachersData, setTeachersData] = useState([]);
-
-  // State for Create Classes
-  const [classes, setClasses] = useState([]);
-  const [selectedClass, setSelectedClass] = useState(null);
-  const [className, setClassName] = useState("");
-  const [lectures, setLectures] = useState([]);
-  const [remainingLectures, setRemainingLectures] = useState(0);
-
-  // Calculate total lectures when numDays or numPeriods changes
-  useEffect(() => {
-    setRemainingLectures(numDays * numPeriods);
-  }, [numDays, numPeriods]);
-
-  // Functions for Create Time Table Structure
-  const saveTimeTableStructure = () => {
-    console.log({ numDays, numPeriods, lunchBreakAfter });
-    setIsTimeTableModalOpen(false);
-    document.querySelector(".create-timetable-button").style.backgroundColor = "#73FD78";
-  };
-
-  // Functions for Add Teachers
-  const handleNumTeachersChange = (e) => {
-    const count = parseInt(e.target.value, 10);
-    setNumTeachers(count);
-    setTeachersData(Array(count).fill({ name: "", code: "", subjects: [] }));
-  };
-
-  const handleTeacherInputChange = (index, field, value) => {
-    const updatedTeachers = [...teachersData];
-    updatedTeachers[index] = {
-      ...updatedTeachers[index],
-      [field]: value,
+// Update the handleGenerate function
+const handleGenerate = async () => {
+  setLoading(true);
+  setError("");
+  try {
+    // Convert class_requirements to backend format
+    const backendData = {
+      ...formData,
+      class_requirements: Object.fromEntries(
+        Object.entries(formData.class_requirements).map(([cls, subjects]) => [
+          cls,
+          Object.fromEntries(
+            Object.entries(subjects).map(([subj, req]) => [
+              subj,
+              {
+                teacher: req.teacher,
+                lectures: req.lectures
+              }
+            ])
+          )
+        ])
+      )
     };
-    setTeachersData(updatedTeachers);
-  };
 
-  const handleSubjectInputChange = (teacherIndex, subjectIndex, field, value) => {
-    const updatedTeachers = [...teachersData];
-    const updatedSubjects = [...(updatedTeachers[teacherIndex].subjects || [])];
-    updatedSubjects[subjectIndex] = {
-      ...updatedSubjects[subjectIndex],
-      [field]: value,
-    };
-    updatedTeachers[teacherIndex].subjects = updatedSubjects;
-    setTeachersData(updatedTeachers);
-  };
-
-  const handleAddSubject = (teacherIndex) => {
-    const updatedTeachers = [...teachersData];
-    const updatedSubjects = [...(updatedTeachers[teacherIndex].subjects || [])];
-    updatedSubjects.push({ name: "", code: "" });
-    updatedTeachers[teacherIndex].subjects = updatedSubjects;
-    setTeachersData(updatedTeachers);
-  };
-
-  const saveTeachers = () => {
-    console.log("Teachers Data Saved:", teachersData);
-    setIsAddTeachersModalOpen(false);
-    document.querySelector(".add-teachers-button").style.backgroundColor = "#73FD78";
-  };
-
-  // Functions for Create Classes
-  const handleCreateClass = () => {
-    const newClass = `Class ${classes.length + 1}`;
-    setClasses([...classes, newClass]);
-  };
-
-  const handleClassClick = (classIndex) => {
-    setSelectedClass(classIndex);
-    setClassName(`Class ${classIndex + 1}`);
-    setLectures([]);
-    setIsCreateClassModalOpen(true);
-    setRemainingLectures(numDays * numPeriods);
-  };
-
-  const handleAddLecture = () => {
-    setLectures([...lectures, { subject: "", teacher: "", numLectures: 1 }]);
-  };
-
-  const handleLectureChange = (index, field, value) => {
-    const updatedLectures = [...lectures];
-    updatedLectures[index] = { ...updatedLectures[index], [field]: value };
-    setLectures(updatedLectures);
-
-    // Update remaining lectures
-    const totalAssignedLectures = updatedLectures.reduce((sum, lecture) => 
-      sum + (parseInt(lecture.numLectures) || 0), 0);
-    setRemainingLectures((numDays * numPeriods) - totalAssignedLectures);
-  };
-
-  const handleDeleteClass = () => {
-    const updatedClasses = classes.filter((_, index) => index !== selectedClass);
-    setClasses(updatedClasses);
-    setIsCreateClassModalOpen(false);
-  };
-
-  const saveClass = () => {
-    if (remainingLectures !== 0) {
-      alert("Cannot save! Remaining lectures should be zero.");
-      return;
-    }
-    
-    // Update the class name in the classes array
-    const updatedClasses = [...classes];
-    updatedClasses[selectedClass] = className;
-    setClasses(updatedClasses);
-    
-    // Make the specific class button green
-    const classButtons = document.querySelectorAll('.class-button');
-    classButtons[selectedClass].style.backgroundColor = "#73FD78";
-    setIsCreateClassModalOpen(false);
-  };
-
-  // Get all unique subjects from teachers
-  const getAllSubjects = () => {
-    const subjects = new Set();
-    teachersData.forEach(teacher => {
-      teacher.subjects.forEach(subject => {
-        subjects.add(subject.name);
-      });
+    const response = await fetch('http://localhost:5000/api/generate-timetable', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(backendData)
     });
-    return Array.from(subjects);
+
+    const data = await response.json();
+    if (data.status === 'success') {
+      navigate('/time-table-generator/toutput', { 
+        state: { 
+          timetable: data.timetable,
+          teachers: data.teachers,
+          originalData: formData
+        } 
+      });
+    } else {
+      setError(data.message || 'Failed to generate timetable');
+    }
+  } catch (err) {
+    setError('Network error occurred');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // Step 1: Basic Structure
+  const Step1 = () => (
+    <div className="step-content">
+      <h2>Step 1: Basic Structure</h2>
+      <div className="form-group">
+        <label>Number of Days (1-7):</label>
+        <input
+          type="number"
+          min="1"
+          max="7"
+          value={formData.num_days}
+          onChange={e => setFormData({
+            ...formData,
+            num_days: Math.min(7, Math.max(1, parseInt(e.target.value)))
+          })}
+        />
+      </div>
+      <div className="form-group">
+        <label>Periods per Day:</label>
+        <input
+          type="number"
+          min="1"
+          value={formData.periods_per_day}
+          onChange={e => setFormData({
+            ...formData,
+            periods_per_day: Math.max(1, parseInt(e.target.value))
+          })}
+        />
+      </div>
+      <div className="form-group">
+        <label>Lunch After Period:</label>
+        <input
+          type="number"
+          min="1"
+          max={formData.periods_per_day}
+          value={formData.lunch_after_period}
+          onChange={e => setFormData({
+            ...formData,
+            lunch_after_period: Math.min(
+              formData.periods_per_day,
+              Math.max(1, parseInt(e.target.value))
+            )
+          })}
+        />
+      </div>
+    </div>
+  );
+
+  // Step 2: Class Information
+  const Step2 = () => {
+    const [localClasses, setLocalClasses] = useState([...formData.classes]);
+    const [activeIndex, setActiveIndex] = useState(null);
+  
+    // Sync local state with formData
+    useEffect(() => {
+      setLocalClasses([...formData.classes]);
+    }, [formData.classes.length]);
+  
+    const handleClassUpdate = (index) => {
+      const newName = localClasses[index].trim();
+      if (!newName) return;
+  
+      setFormData(prev => {
+        const updatedClasses = [...prev.classes];
+        const oldName = updatedClasses[index];
+        updatedClasses[index] = newName;
+  
+        const newRequirements = { ...prev.class_requirements };
+        newRequirements[newName] = newRequirements[oldName] || {};
+        if (oldName !== newName) delete newRequirements[oldName];
+  
+        return {
+          ...prev,
+          classes: updatedClasses,
+          class_requirements: newRequirements
+        };
+      });
+      setActiveIndex(null);
+    };
+  
+    return (
+      <div className="step-content">
+        <h2>Step 2: Class Information</h2>
+        <div className="form-group">
+          <label>Number of Classes:</label>
+          <input
+            type="number"
+            min="1"
+            value={formData.classes.length}
+            onChange={e => {
+              const newCount = Math.max(1, parseInt(e.target.value) || 1);
+              setFormData(prev => {
+                const currentClasses = prev.classes;
+                let newClasses;
+  
+                if (newCount > currentClasses.length) {
+                  newClasses = [
+                    ...currentClasses,
+                    ...Array(newCount - currentClasses.length).fill("")
+                  ];
+                } else {
+                  newClasses = currentClasses.slice(0, newCount);
+                }
+  
+                const newRequirements = { ...prev.class_requirements };
+                currentClasses
+                  .filter((_, i) => i >= newCount)
+                  .forEach(cls => delete newRequirements[cls]);
+  
+                return { ...prev, classes: newClasses, class_requirements: newRequirements };
+              });
+            }}
+          />
+        </div>
+  
+        {formData.classes.map((cls, i) => (
+          <div className="form-group" key={`class-${i}`}>
+            <label>Class {i+1} Name:</label>
+            <input
+              value={localClasses[i] || ""}
+              onChange={e => {
+                const newLocalClasses = [...localClasses];
+                newLocalClasses[i] = e.target.value;
+                setLocalClasses(newLocalClasses);
+              }}
+              onFocus={() => setActiveIndex(i)}
+              onBlur={() => handleClassUpdate(i)}
+              onKeyPress={e => e.key === 'Enter' && handleClassUpdate(i)}
+              placeholder="Enter class name (e.g., 10-A)"
+            />
+            {activeIndex === i && (
+              <small className="hint"></small>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+  
+  
+
+  // Step 3: Subject Management
+  const Step3 = () => {
+    const [subject, setSubject] = useState({ name: "", is_lab: false });
+
+    return (
+      <div className="step-content">
+        <h2>Step 3: Subject Management</h2>
+        <div className="form-group">
+          <label>Subject Name:</label>
+          <input
+            value={subject.name}
+            onChange={e => setSubject({ ...subject, name: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={subject.is_lab}
+              onChange={e => setSubject({ ...subject, is_lab: e.target.checked })}
+            />
+            Lab Subject
+          </label>
+        </div>
+        <button
+          className="add-button"
+          onClick={() => {
+            if (!subject.name) return;
+            setFormData({
+              ...formData,
+              subjects: {
+                ...formData.subjects,
+                [subject.name]: { is_lab: subject.is_lab }
+              }
+            });
+            setSubject({ name: "", is_lab: false });
+          }}
+        >
+          Add Subject
+        </button>
+
+        <div className="subject-list">
+          <h4>Added Subjects:</h4>
+          {Object.keys(formData.subjects).map(subj => (
+            <div key={subj} className="subject-item">
+              {subj} {formData.subjects[subj].is_lab && "(Lab)"}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
-  // Get teachers for a specific subject
-  const getTeachersForSubject = (subjectName) => {
-    return teachersData.filter(teacher =>
-      teacher.subjects.some(subject => subject.name === subjectName)
-    ).map(teacher => teacher.name);
+  // Step 4: Teacher Management
+  const Step4 = () => {
+    const [teacher, setTeacher] = useState({ code: "", name: "", subjects: [] });
+
+    return (
+      <div className="step-content">
+        <h2>Step 4: Teacher Management</h2>
+        <div className="form-group">
+          <label>Teacher Code:</label>
+          <input
+            value={teacher.code}
+            onChange={e => setTeacher({...teacher, code: e.target.value})}
+          />
+        </div>
+        <div className="form-group">
+          <label>Teacher Name:</label>
+          <input
+            value={teacher.name}
+            onChange={e => setTeacher({...teacher, name: e.target.value})}
+          />
+        </div>
+        <div className="form-group">
+          <label>Subjects Can Teach:</label>
+          <select
+            multiple
+            value={teacher.subjects}
+            onChange={e => setTeacher({
+              ...teacher,
+              subjects: Array.from(e.target.selectedOptions, option => option.value)
+            })}
+          >
+            {Object.keys(formData.subjects).map(subject => (
+              <option key={subject} value={subject}>{subject}</option>
+            ))}
+          </select>
+        </div>
+        <button
+          className="add-button"
+          onClick={() => {
+            if (!teacher.code || !teacher.name || !teacher.subjects.length) return;
+            setFormData({
+              ...formData,
+              teachers: {
+                ...formData.teachers,
+                [teacher.code]: {
+                  name: teacher.name,
+                  subjects: teacher.subjects
+                }
+              }
+            });
+            setTeacher({ code: "", name: "", subjects: [] });
+          }}
+        >
+          Add Teacher
+        </button>
+
+        <div className="teacher-list">
+          <h4>Added Teachers:</h4>
+          {Object.entries(formData.teachers).map(([code, t]) => (
+            <div key={code} className="teacher-item">
+              {code} - {t.name} ({t.subjects.join(", ")})
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
+
+  const Step5 = () => {
+    // Initialize requirements structure only once
+    const [requirements, setRequirements] = useState(() => {
+      const initial = {};
+      formData.classes.forEach(className => {
+        initial[className] = {};
+        Object.keys(formData.subjects).forEach(subject => {
+          initial[className][subject] = formData.class_requirements?.[className]?.[subject] || {
+            teacher: "",
+            lectures: 0
+          };
+        });
+      });
+      return initial;
+    });
+  
+    // Save to formData only when moving to next step
+    const handleNext = () => {
+      setFormData(prev => ({
+        ...prev,
+        class_requirements: requirements
+      }));
+      // Move to next step
+      setCurrentStep(prev => prev + 1);
+    };
+  
+    return (
+      <div className="step-content">
+        <h2>Step 5: Class Requirements</h2>
+        {formData.classes.map(className => (
+          <div key={className} className="class-requirements">
+            <h3>{className}</h3>
+            {Object.keys(formData.subjects).map(subject => (
+              <div key={subject} className="form-group">
+                <label>{subject} ({formData.subjects[subject].is_lab ? 'Lab' : 'Theory'}):</label>
+                <select
+                  value={requirements[className][subject].teacher}
+                  onChange={e => setRequirements(prev => ({
+                    ...prev,
+                    [className]: {
+                      ...prev[className],
+                      [subject]: {
+                        ...prev[className][subject],
+                        teacher: e.target.value
+                      }
+                    }
+                  }))}
+                >
+                  <option value="">Select Teacher</option>
+                  {Object.entries(formData.teachers)
+                    .filter(([_, t]) => t.subjects.includes(subject))
+                    .map(([code, t]) => (
+                      <option key={code} value={code}>{t.name} ({code})</option>
+                    ))}
+                </select>
+                <input
+                  type="number"
+                  min="0"
+                  value={requirements[className][subject].lectures}
+                  onChange={e => {
+                    const lectures = Math.max(0, parseInt(e.target.value) || 0);
+                    setRequirements(prev => ({
+                      ...prev,
+                      [className]: {
+                        ...prev[className],
+                        [subject]: {
+                          ...prev[className][subject],
+                          lectures: lectures
+                        }
+                      }
+                    }));
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
+        
+        {/* Next Button */}
+        <button onClick={handleNext} className="next-button">
+          SAVE
+        </button>
+      </div>
+    );
+  };  
+  
+  
+  
+  // Step 6: Review and Generate
+  const Step6 = () => (
+    <div className="step-content">
+      <h2>Step 6: Review and Generate</h2>
+      {error && <div className="error-message">{error}</div>}
+      <button
+        className="generate-button"
+        onClick={handleGenerate}
+        disabled={loading}
+      >
+        {loading ? "Generating..." : "Generate Timetable"}
+      </button>
+      <pre className="review-data">{JSON.stringify(formData, null, 2)}</pre>
+    </div>
+  );
 
   return (
     <div className="main-content">
-      {/* Header */}
       <div className="header">
         <button onClick={() => navigate("/")} className="back-button">
           ← Back
@@ -164,313 +446,37 @@ const TimeTableGenerator = () => {
         <h1>Time Table Generator</h1>
       </div>
 
-      {/* Buttons Section */}
-      <div className="time-table-container">
-        {/* Create Time Table Structure */}
-        <div className="time-table-item">
-          <span>Create Time Table Structure:</span>
-          <button
-            className="action-button create-timetable-button"
-            onClick={() => setIsTimeTableModalOpen(true)}
-          >
-            + Create
-          </button>
+      <div className="stepper-container">
+        <div className="stepper-header">
+          {[1, 2, 3, 4, 5, 6].map(s => (
+            <div key={s} className={`stepper-circle ${s <= step ? "active" : ""}`}>
+              {s}
+            </div>
+          ))}
         </div>
 
-        {/* Add Teachers */}
-        <div className="time-table-item">
-          <span>Add Teachers:</span>
-          <button
-            className="action-button add-teachers-button"
-            onClick={() => setIsAddTeachersModalOpen(true)}
-          >
-            + Add
-          </button>
+        <div className="step-content-wrapper">
+          {step === 1 && <Step1 />}
+          {step === 2 && <Step2 />}
+          {step === 3 && <Step3 />}
+          {step === 4 && <Step4 />}
+          {step === 5 && <Step5 />}
+          {step === 6 && <Step6 />}
         </div>
 
-        {/* Create Classes */}
-        <div className="time-table-item">
-  <span>Create Classes:</span>
-  <div className="class-buttons">
-    {classes.map((className, index) => (
-      <button
-        key={index}
-        className="class-button"
-        onClick={() => handleClassClick(index)}
-        style={{ backgroundColor: "#6a4ee6" }} // Set default blue color explicitly
-      >
-        {className}
-      </button>
-    ))}
-    <button 
-      className="action-button create-classes-button" 
-      onClick={handleCreateClass}
-      // style={{ backgroundColor: "#ffa500" }} // Keep create button orange
-    >
-      + Create
-    </button>
-  </div>
-</div>
-
-        <div className="generate-button-container">
-          <button onClick={handleGenerate} className="generate-button">GENERATE</button>
+        <div className="stepper-controls">
+          {step > 1 && (
+            <button className="nav-button prev-button" onClick={prevStep}>
+              Previous
+            </button>
+          )}
+          {step < 6 && (
+            <button className="nav-button next-button" onClick={nextStep}>
+              Next
+            </button>
+          )}
         </div>
       </div>
-
-      {/* Create Time Table Modal */}
-      {isTimeTableModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2>Create Time Table Structure</h2>
-              <button
-                className="close-button"
-                onClick={() => setIsTimeTableModalOpen(false)}
-              >
-                &times;
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="modal-input">
-                <label>Number of Days:</label>
-                <select
-                  value={numDays}
-                  onChange={(e) => setNumDays(parseInt(e.target.value, 10))}
-                >
-                  <option value={5}>5</option>
-                  <option value={6}>6</option>
-                </select>
-              </div>
-              <div className="modal-input">
-                <label>Number of Periods:</label>
-                <select
-                  value={numPeriods}
-                  onChange={(e) => setNumPeriods(parseInt(e.target.value, 10))}
-                >
-                  {Array.from({ length: 10 }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="modal-input">
-                <label>Lunch Break After Which Period:</label>
-                <select
-                  value={lunchBreakAfter}
-                  onChange={(e) =>
-                    setLunchBreakAfter(parseInt(e.target.value, 10))
-                  }
-                >
-                  {Array.from({ length: numPeriods }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="save-button" onClick={saveTimeTableStructure}>
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Teachers Modal */}
-      {isAddTeachersModalOpen && (
-        <div className="modal">
-          <div className="modal-content" style={{ maxHeight: "500px" }}>
-            <div className="modal-header">
-              <h2>Add Teachers</h2>
-              <button
-                className="close-button"
-                onClick={() => setIsAddTeachersModalOpen(false)}
-              >
-                &times;
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="modal-input">
-                <label>Enter Number of Teachers:</label>
-                <input
-                  type="number"
-                  min="1"
-                  onChange={handleNumTeachersChange}
-                />
-              </div>
-
-              {/* Dynamic Teacher Inputs */}
-              {teachersData.map((teacher, teacherIndex) => (
-                <div key={teacherIndex} className="teacher-section">
-                  <h3 style={{ color: "#B0B0B0" }}>Teacher {teacherIndex + 1}</h3>
-                  <div className="modal-input">
-                    <label>Name:</label>
-                    <input
-                      type="text"
-                      value={teacher.name}
-                      onChange={(e) =>
-                        handleTeacherInputChange(teacherIndex, "name", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="modal-input">
-                    <label>Code:</label>
-                    <input
-                      type="text"
-                      value={teacher.code}
-                      onChange={(e) =>
-                        handleTeacherInputChange(teacherIndex, "code", e.target.value)
-                      }
-                    />
-                  </div>
-                  {/* Add Subjects */}
-                  {teacher.subjects.map((subject, subjectIndex) => (
-                    <div key={subjectIndex} className="subject-section">
-                      <div className="modal-input">
-                        <label>Subject Name:</label>
-                        <input
-                          type="text"
-                          value={subject.name}
-                          onChange={(e) =>
-                            handleSubjectInputChange(
-                              teacherIndex,
-                              subjectIndex,
-                              "name",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="modal-input">
-                        <label>Subject Code:</label>
-                        <input
-                          type="text"
-                          value={subject.code}
-                          onChange={(e) =>
-                            handleSubjectInputChange(
-                              teacherIndex,
-                              subjectIndex,
-                              "code",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  ))}
-                  <button
-                    className="action-button add-subject-button"
-                    onClick={() => handleAddSubject(teacherIndex)}
-                  >
-                    + Add Subject
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="modal-footer">
-              <button className="save-button" onClick={saveTeachers}>
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Create Class Modal */}
-      {isCreateClassModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2>Create Class</h2>
-              <button
-                className="close-button"
-                onClick={() => setIsCreateClassModalOpen(false)}
-              >
-                &times;
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="modal-input">
-                <label>Class Name:</label>
-                <input
-                  type="text"
-                  value={className}
-                  onChange={(e) => setClassName(e.target.value)}
-                />
-              </div>
-              
-              <div className="remaining-lectures">
-                <h3>Remaining Lectures: {remainingLectures}</h3>
-                <button className="action-button" onClick={handleAddLecture}>
-                  + Add Lecture
-                </button>
-              </div>
-
-              {lectures.map((lecture, index) => (
-                <div key={index} className="lecture-section">
-                  <h4 style={{ color: "#B0B0B0" }}>Lecture {index + 1}</h4>
-                  <div className="modal-input">
-                    <label>Subject Name:</label>
-                    <select
-                      value={lecture.subject}
-                      onChange={(e) => handleLectureChange(index, "subject", e.target.value)}
-                    >
-                      <option value="">Select Subject</option>
-                      {getAllSubjects().map((subject, idx) => (
-                        <option key={idx} value={subject}>
-                          {subject}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="modal-input">
-                    <label>Teacher Name:</label>
-                    <select
-                      value={lecture.teacher}
-                      onChange={(e) => handleLectureChange(index, "teacher", e.target.value)}
-                      disabled={!lecture.subject}
-                    >
-                      <option value="">Select Teacher</option>
-                      {lecture.subject &&
-                        getTeachersForSubject(lecture.subject).map((teacher, idx) => (
-                          <option key={idx} value={teacher}>
-                            {teacher}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <div className="modal-input">
-                    <label>Number of Lectures:</label>
-                    <input
-                      type="number"
-                      min="1"
-                      max={remainingLectures + (parseInt(lecture.numLectures) || 0)}
-                      value={lecture.numLectures}
-                      onChange={(e) => handleLectureChange(index, "numLectures", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* // Modify the save button in the Create Class Modal footer */}
-<div className="modal-footer">
-  <button className="delete-button" onClick={handleDeleteClass}>
-    Delete Class
-  </button>
-  <button 
-    className={`save-button ${remainingLectures !== 0 ? 'disabled-button' : ''}`} 
-    onClick={saveClass}
-  >
-    Save
-  </button>
-</div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

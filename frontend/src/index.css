@@ -706,3 +706,400 @@ h1 {
   color: #333;
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+
+.stepper-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.stepper-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.stepper-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.stepper-circle.active {
+  background: #73FD78;
+  color: #000;
+}
+
+.step-content {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.stepper-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.next-button {
+  background: #4CAF50;
+  color: white;
+}
+
+.prev-button {
+  background: #666;
+  color: white;
+}
+
+.generate-button {
+  background: #7a5ff8;
+  color: white;
+  padding: 12px 30px;
+  font-size: 16px;
+}
+
+.subject-list, .teacher-list {
+  margin-top: 20px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+/* Timetable Output Styling */
+.timetable-container {
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+.timetable-class {
+  margin-bottom: 40px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.timetable-day {
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  min-width: 120px;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+td small {
+  color: #666;
+  font-size: 0.8em;
+}
+
+.generate-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.error-message {
+  color: #ff4444;
+  font-size: 0.8em;
+  margin-top: 5px;
+}
+
+.requirement-fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.requirement-fields select,
+.requirement-fields input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.class-requirements {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid #dc3545;
+  border-radius: 4px;
+}
+
+.review-data {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  max-height: 400px;
+  overflow: auto;
+}
+.timetable-class {
+  margin: 2rem 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.timetable-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.timetable-day {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.periods {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.period {
+  padding: 0.8rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: white;
+}
+
+.lunch-break {
+  color: #dc3545;
+  font-weight: bold;
+  text-align: center;
+}
+
+.subject-entry {
+  line-height: 1.4;
+}
+
+.teacher-info {
+  font-size: 0.9em;
+  color: #6c757d;
+}
+
+.lab-indicator {
+  color: #0d6efd;
+  font-size: 0.8em;
+}
+
+.free-period {
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Add to your main CSS file */
+.timetable-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.class-timetable {
+  margin-bottom: 40px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.day-schedule {
+  margin-bottom: 30px;
+}
+
+.periods-grid {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.period-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.period-number {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+.lunch-break {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+
+.teacher {
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.transposed-timetable th,
+.transposed-timetable td {
+  border: 1px solid #dee2e6;
+  padding: 10px;
+  text-align: center;
+}
+
+.transposed-timetable th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.period-label {
+  font-weight: 500;
+  background-color: #f8f9fa;
+}
+
+.lunch-row {
+  background-color: #fff3cd;
+}
+
+.lunch-row .period-label {
+  background-color: #ffeeba;
+}
+
+.lunch-break {
+  color: #6a4ee6;
+  font-weight: 500;
+}
+
+.subject {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.teacher {
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 20px;
+  text-align: center;
+}
+
+.loading-message {
+  color: #6c757d;
+  padding: 20px;
+  text-align: center;
+}
+.timetable-container {
+  overflow-x: auto;
+}
+
+.transposed-timetable {
+  min-width: 800px;
+  border: 1px solid black !important;
+}
+
+.timetable-cell {
+  min-width: 150px;
+  height: 60px;
+  vertical-align: middle;
+  border: 1px solid black !important;
+}
+
+/* Header row styling */
+.header-row th {
+  background-color: #ff6b6b !important;
+  color: white;
+  border: 1px solid black !important;
+}
+
+.period-label {
+  background-color: #ff6b6b;
+  color: white;
+  font-weight: 600;
+  border: 1px solid black !important;
+}
+
+/* Lunch row styling - UPDATED */
+.lunch-row,
+.lunch-row td {
+  background-color: #6a4ee6 !important;
+  color: white !important;
+}
+
+.lunch-row .period-label .lunch-cell{
+  background-color: #6a4ee6 !important; /* Match row color */
+  color: white !important;
+  border-color: #5a3ec6 !important;
+  border: 1px solid black !important;
+}
+
+
+.lunch-break {
+  font-weight: 500;
+  color: white;
+  background-color: #6a4ee6
+}
+
+.lunch-cell .lunch-break,
+.lunch-cell .subject,
+.lunch-cell .teacher {
+  color: white !important;
+}
